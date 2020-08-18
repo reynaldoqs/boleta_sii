@@ -49,7 +49,7 @@
                   <v-text-field v-model="formData.prestaciones[0].valor" label="Valor 1" required></v-text-field>
                 </v-col>
               </v-row>
-              <v-btn @click="generar" type="submit">Generar boleta</v-btn>
+              <v-btn @click="generar">Generar boleta</v-btn>
             </template>
             <v-progress-circular v-else indeterminate color="primary"></v-progress-circular>
           </v-col>
@@ -63,10 +63,13 @@
                 <img
                   class="boleta-img"
                   v-if="response"
-                  :src="`http://localhost:3000/${response.imgUrl}`"
+                  :src="`https://unabasesii.herokuapp.com/images/${response.imgUrl}`"
                   alt
                 />
               </v-col>
+              <v-row>
+                <v-btn v-if="response" @click="linkPdf">ver pdf</v-btn>
+              </v-row>
             </v-row>
           </v-col>
         </v-row>
@@ -77,6 +80,7 @@
 <script>
 import { genBoleta } from "../services/sii";
 import { REGIONES } from "../utils/regiones";
+
 export default {
   name: "boleta",
   data: () => ({
@@ -105,6 +109,12 @@ export default {
     },
   },
   methods: {
+    linkPdf() {
+      window.open(
+        `https://unabasesii.herokuapp.com/images/${this.response.pdfUrl}`,
+        "_blank"
+      );
+    },
     async generar() {
       try {
         this.response = null;
